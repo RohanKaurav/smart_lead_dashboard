@@ -133,6 +133,7 @@ Open:
 
 - Inside containers, use **service names** (`mongo`, `server`, `client`) on the Docker network.
 - In this repo, server uses `MONGODB_URI=mongodb://mongo:27017/smartleads` in compose.
+- `VITE_API_URL` is a build-time client variable; it is baked into static files and used by the browser at runtime.
 - Your browser runs on the host machine, so client-side API calls must use host ports like `http://localhost:4000/api` (not `http://server:4000/api`).
 - `localhost` in a container means **that container itself**, not your host and not other containers.
 
@@ -266,7 +267,7 @@ curl "http://localhost:4000/api/leads/export?status=qualified&source=instagram&s
 
 - Demo credentials are not included.
 - Create test users with `POST /api/auth/register` (sales role).
-- Create/promote an admin with `npm run seed:admin` in `server/` (script is defined in `server/package.json`, uses `ADMIN_*` env vars).
+- Create/promote an admin with `npm run seed:admin` in `server/` (script is defined in `server/package.json`, uses `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` from `.env.example`).
 
 ## Deployment notes (Phase 9)
 
