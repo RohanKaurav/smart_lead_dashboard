@@ -3,7 +3,7 @@ import type { Lead, LeadFilters } from '../types/lead';
 import { apiRequest, ApiRequestError } from './client';
 import { getToken } from '../utils/token';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'https://smart-lead-dashboard-1-tqur.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'https://smart-lead-dashboard-1-tqur.onrender.com/api';
 
 function buildQueryString(filters: Partial<LeadFilters>): string {
   const params = new URLSearchParams();
