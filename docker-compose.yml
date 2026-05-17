@@ -24,7 +24,7 @@ services:
       PORT: 4000
       CLIENT_URL: http://localhost:8080
       MONGODB_URI: mongodb://mongo:27017/smartleads
-      JWT_SECRET: change-this-long-secret-before-nonlocal-deployments
+      JWT_SECRET: ${JWT_SECRET:-local-dev-only-change-this-secret}
       JWT_EXPIRES_IN: 7d
     ports:
       - '4000:4000'
