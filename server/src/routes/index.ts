@@ -2,6 +2,9 @@ import { Router } from 'express';
 import mongoose from 'mongoose';
 import { env } from '../config/env';
 import type { ApiSuccessResponse } from '../types/api';
+import adminRoutes from './admin.routes';
+import authRoutes from './auth.routes';
+import leadRoutes from './lead.routes';
 
 interface HealthData {
   status: string;
@@ -11,6 +14,10 @@ interface HealthData {
 }
 
 const router = Router();
+
+router.use('/auth', authRoutes);
+router.use('/admin', adminRoutes);
+router.use('/leads', leadRoutes);
 
 router.get('/health', (_req, res) => {
   const payload: ApiSuccessResponse<HealthData> = {

@@ -57,7 +57,11 @@ export function errorHandler(
     (err as { code: number }).code === 11000
   ) {
     statusCode = 409;
-    message = 'Duplicate key conflict';
+    const duplicateKey = err as { keyPattern?: Record<string, unknown> };
+    message =
+      duplicateKey.keyPattern && 'email' in duplicateKey.keyPattern
+        ? 'Email already registered'
+        : 'Duplicate key conflict';
   } else if (err instanceof Error) {
     message = err.message;
   }

@@ -90,6 +90,99 @@ Expected health response:
 }
 ```
 
+## Auth API (Phase 2)
+
+| Method | Endpoint | Auth | Description |
+| ------ | -------- | ---- | ----------- |
+| POST | `/api/auth/register` | No | Register (`name`, `email`, `password`) — role defaults to `sales` |
+| POST | `/api/auth/login` | No | Login — returns `{ user, token }` |
+| GET | `/api/auth/me` | Bearer token | Current user profile |
+
+**Example — register**
+
+```bash
+curl -X POST http://localhost:4000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d "{\"name\":\"Rahul\",\"email\":\"rahul@example.com\",\"password\":\"password123\"}"
+```
+
+**Example — protected route**
+
+```bash
+curl http://localhost:4000/api/auth/me \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+## RBAC (Phase 3)
+
+| Role | Permissions |
+| ---- | ----------- |
+| `admin` | Full access; can delete leads (Phase 4); sees all users via admin API |
+| `sales` | CRUD on own leads only (Phase 4); cannot delete leads |
+
+**Create the first admin** (after MongoDB is running):
+
+```bash
+cd server
+# Add ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD to server/.env (see .env.example)
+npm run seed:admin
+```
+
+**Admin-only route** (requires admin JWT):
+
+| Method | Endpoint | Description |
+| ------ | -------- | ----------- |
+| GET | `/api/admin/overview` | User list + counts by role |
+
+Sales users receive `403` on admin routes. Registration always assigns `sales`; sending `role` in the body is rejected (strict schema).
+
+**Example — admin overview**
+
+```bash
+curl http://localhost:4000/api/admin/overview \
+  -H "Authorization: Bearer ADMIN_JWT_TOKEN"
+```
+
+## Leads API (Phase 4)
+
+All routes require `Authorization: Bearer <token>`. Pagination is fixed at **10** per page.
+
+| Method | Endpoint | Role | Description |
+| ------ | -------- | ---- | ----------- |
+| GET | `/api/leads` | admin / sales | List with filters + pagination |
+| GET | `/api/leads/:id` | admin / sales | Single lead (sales: own only) |
+| POST | `/api/leads` | admin / sales | Create lead |
+| PATCH | `/api/leads/:id` | admin / sales | Update lead (sales: own only) |
+| DELETE | `/api/leads/:id` | **admin only** | Delete lead |
+
+**Query params (combinable):** `page`, `status`, `source`, `search`, `sort` (`latest` \| `oldest`)
+
+```bash
+# Combined filters example
+curl "http://localhost:4000/api/leads?status=qualified&source=instagram&search=Rahul&sort=latest&page=1" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Create lead
+curl -X POST http://localhost:4000/api/leads \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{\"name\":\"Rahul Sharma\",\"email\":\"rahul@example.com\",\"status\":\"new\",\"source\":\"instagram\"}"
+```
+
+## CSV export (Phase 5)
+
+| Method | Endpoint | Description |
+| ------ | -------- | ----------- |
+| GET | `/api/leads/export` | Download CSV for current filters (no pagination — all matching rows) |
+
+Uses the same query params as list (except `page`): `status`, `source`, `search`, `sort`. Respects RBAC (sales export only their leads).
+
+```bash
+curl "http://localhost:4000/api/leads/export?status=qualified&source=instagram&search=Rahul&sort=latest" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -o leads.csv
+```
+
 ## Scripts
 
 ### Client (`client/`)
@@ -108,15 +201,16 @@ Expected health response:
 | `npm run build`   | Compile TypeScript to `dist/`  |
 | `npm start`       | Run compiled API               |
 | `npm run typecheck` | Type-check without emitting  |
+| `npm run seed:admin`| Create/promote admin user      |
 
 ## Development phases
 
 - [x] **Phase 0** — Tooling, monorepo scaffold, health route
 - [x] **Phase 1** — MongoDB, error handling, validation
-- [ ] **Phase 2** — JWT authentication
-- [ ] **Phase 3** — Role-based access control
-- [ ] **Phase 4** — Leads CRUD, filters, pagination
-- [ ] **Phase 5** — CSV export
+- [x] **Phase 2** — JWT authentication
+- [x] **Phase 3** — Role-based access control
+- [x] **Phase 4** — Leads CRUD, filters, pagination
+- [x] **Phase 5** — CSV export
 - [ ] **Phase 6+** — Dashboard UI, Docker, deployment
 
 ## License
