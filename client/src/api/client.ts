@@ -1,7 +1,7 @@
 import type { ApiErrorResponse, ApiSuccessResponse } from '../types/api';
 import { clearToken, getToken } from '../utils/token';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'https://smart-lead-dashboard-1-tqur.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'https://smart-lead-dashboard-1-tqur.onrender.com/api';
 
 export class ApiRequestError extends Error {
   readonly statusCode: number;
