@@ -262,16 +262,15 @@ curl "http://localhost:4000/api/leads/export?status=qualified&source=instagram&s
 
 ## Demo credentials
 
-- Demo credentials are not included. Create test users with:
-- Use `POST /api/auth/register` to create a sales user.
-- Use `npm run seed:admin` in `server/` (with `ADMIN_*` env vars) to create/promote an admin.
+- Demo credentials are not included.
+- Create test users with `POST /api/auth/register` (sales role).
+- Create/promote an admin with `npm run seed:admin` in `server/` (uses `ADMIN_*` env vars).
 
 ## Deployment notes (Phase 9)
 
 ### 1) MongoDB Atlas
 - Create an Atlas cluster and database user.
 - Allow only your API host IP in Atlas network access.
-- Avoid `0.0.0.0/0` except for brief local testing, and remove it immediately after verification.
 - Set `MONGODB_URI` in API host env vars to your Atlas connection string.
 
 ### 2) API hosting (Render or Railway)
