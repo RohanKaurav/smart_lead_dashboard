@@ -267,7 +267,9 @@ curl "http://localhost:4000/api/leads/export?status=qualified&source=instagram&s
 
 - Demo credentials are not included.
 - Create test users with `POST /api/auth/register` (sales role).
-- Create/promote an admin with `npm run seed:admin` in `server/` (script is defined in `server/package.json`; first copy `server/.env.example` to `server/.env`, then set `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`).
+- To create an admin: copy `server/.env.example` to `server/.env`.
+- Set `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in `server/.env`.
+- Run `npm run seed:admin` in `server/` (script is defined in `server/package.json`).
 
 ## Deployment notes (Phase 9)
 

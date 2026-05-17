@@ -24,7 +24,8 @@ services:
       PORT: 4000
       CLIENT_URL: http://localhost:8080
       MONGODB_URI: mongodb://mongo:27017/smartleads
-      JWT_SECRET: "${JWT_SECRET:?JWT_SECRET must be set before running docker compose up --build (example: export JWT_SECRET=your_secret_here)}"
+      # Set before running compose: export JWT_SECRET=your_secret_here
+      JWT_SECRET: "${JWT_SECRET:?JWT_SECRET is required}"
       JWT_EXPIRES_IN: 7d
     ports:
       - '4000:4000'
