@@ -25,6 +25,26 @@ smart-leads-dashboard/
 - **Node.js** 20+ (22+ recommended for latest Vite)
 - **npm** 10+
 - **MongoDB** local or [MongoDB Atlas](https://www.mongodb.com/atlas) (required from Phase 1)
+- **Docker + Docker Compose** (optional, for Phase 8 containerized setup)
+
+## Architecture
+
+```text
+Browser (localhost:8080 or 5173)
+        │
+        ├──> Client (React + Vite / nginx static)
+        │         │
+        │         └── HTTP calls to VITE_API_URL
+        │
+        └──> API Server (Express, localhost:4000)
+                  │
+                  └── MongoDB (localhost:27017 locally, "mongo" service in compose)
+```
+
+- API base path: `/api`
+- Auth: JWT bearer token
+- RBAC: `admin` and `sales`
+- Detailed API reference: [`docs/API.md`](docs/API.md)
 
 ## Local setup (Phase 0)
 
@@ -89,6 +109,33 @@ Expected health response:
   }
 }
 ```
+
+## Docker setup (Phase 8)
+
+From repository root:
+
+```bash
+# set JWT secret once for your shell (required by docker-compose.yml)
+export JWT_SECRET=replace_with_a_long_random_secret
+docker compose up --build
+```
+
+Services started by compose:
+- `mongo` (MongoDB)
+- `server` (Express API built from TypeScript and started with `node dist/index.js`)
+- `client` (production client build served by nginx)
+
+Open:
+- Client: [http://localhost:8080](http://localhost:8080)
+- API health: [http://localhost:4000/api/health](http://localhost:4000/api/health)
+
+### Important networking concept
+
+- Inside containers, use **service names** (`mongo`, `server`, `client`) on the Docker network.
+- In this repo, server uses `MONGODB_URI=mongodb://mongo:27017/smartleads` in compose.
+- `VITE_API_URL` is a build-time client variable; it is baked into static files and used by the browser at runtime.
+- Your browser runs on the host machine, so client-side API calls must use host ports like `http://localhost:4000/api` (not `http://server:4000/api`).
+- `localhost` in a container means **that container itself**, not your host and not other containers.
 
 ## Auth API (Phase 2)
 
@@ -211,7 +258,37 @@ curl "http://localhost:4000/api/leads/export?status=qualified&source=instagram&s
 - [x] **Phase 3** — Role-based access control
 - [x] **Phase 4** — Leads CRUD, filters, pagination
 - [x] **Phase 5** — CSV export
-- [ ] **Phase 6+** — Dashboard UI, Docker, deployment
+- [ ] **Phase 6** — Dashboard UI
+- [ ] **Phase 7** — Advanced UI features
+- [x] **Phase 8** — Docker (compose + containerized server/client)
+- [x] **Phase 9** — Docs, polish, deployment support
+
+## Demo credentials
+
+- Demo credentials are not included.
+- Create test users with `POST /api/auth/register` (sales role).
+- To create an admin: copy `server/.env.example` to `server/.env`.
+- Set `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in `server/.env`.
+- Run `npm run seed:admin` in `server/` (script is defined in `server/package.json`).
+
+## Deployment notes (Phase 9)
+
+### 1) MongoDB Atlas
+- Create an Atlas cluster and database user.
+- Allow only your API host IP in Atlas network access.
+- Set `MONGODB_URI` in API host env vars to your Atlas connection string.
+
+### 2) API hosting (Render or Railway)
+- Deploy `server/` as a Node service.
+- Build command: `npm install && npm run build`
+- Start command: `npm start`
+- Required env vars: `NODE_ENV=production`, `PORT`, `MONGODB_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `CLIENT_URL`.
+
+### 3) Client hosting (Vercel or Netlify)
+- Deploy `client/`.
+- Build command: `npm run build`
+- Publish directory: `dist`
+- Set `VITE_API_URL` to your deployed API URL, e.g. `https://your-api.example.com/api`.
 
 ## License
 
