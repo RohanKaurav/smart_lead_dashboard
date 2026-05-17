@@ -115,6 +115,8 @@ Expected health response:
 From repository root:
 
 ```bash
+# set JWT secret once for your shell (required by docker-compose.yml)
+export JWT_SECRET=replace_with_a_long_random_secret
 docker compose up --build
 ```
 

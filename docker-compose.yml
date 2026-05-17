@@ -20,11 +20,11 @@ services:
       mongo:
         condition: service_healthy
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       PORT: 4000
       CLIENT_URL: http://localhost:8080
       MONGODB_URI: mongodb://mongo:27017/smartleads
-      JWT_SECRET: ${JWT_SECRET:-CHANGE_ME_IN_PRODUCTION_FOR_REAL_DEPLOYMENTS}
+      JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: 7d
     ports:
       - '4000:4000'
