@@ -1,6 +1,5 @@
 import cors from 'cors';
 import express, { type Application } from 'express';
-import { env } from './config/env';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import apiRoutes from './routes/index';
 
