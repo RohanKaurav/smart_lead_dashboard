@@ -1,6 +1,6 @@
 # Smart Leads Dashboard
 
-Full-stack Lead Management Dashboard (MERN + TypeScript) for the ServiceHive internship assignment.
+Full-stack Lead Management Dashboard (MERN + TypeScript) 
 
 ## Tech stack
 
@@ -8,7 +8,7 @@ Full-stack Lead Management Dashboard (MERN + TypeScript) for the ServiceHive int
 | -------- | ------------------------------------------ |
 | Frontend | React, TypeScript, Vite, Tailwind CSS      |
 | Backend  | Node.js, Express, TypeScript               |
-| Database | MongoDB + Mongoose (Phase 1+)              |
+| Database | MongoDB + Mongoose              |
 
 ## Project structure
 
@@ -24,8 +24,8 @@ smart-leads-dashboard/
 
 - **Node.js** 20+ (22+ recommended for latest Vite)
 - **npm** 10+
-- **MongoDB** local or [MongoDB Atlas](https://www.mongodb.com/atlas) (required from Phase 1)
-- **Docker + Docker Compose** (optional, for Phase 8 containerized setup)
+- **MongoDB** local or [MongoDB Atlas](https://www.mongodb.com/atlas) 
+- **Docker + Docker Compose** (optional, for containerized setup)
 
 ## Architecture
 
@@ -46,7 +46,7 @@ Browser (localhost:8080 or 5173)
 - RBAC: `admin` and `sales`
 - Detailed API reference: [`docs/API.md`](docs/API.md)
 
-## Local setup (Phase 0)
+## Local setup 
 
 ### 1. Clone and install
 
@@ -91,7 +91,7 @@ cd client
 npm run dev
 ```
 
-### 4. Verify Phase 0
+### 4. Verify 
 
 - Frontend: [http://localhost:5173](http://localhost:5173)
 - Health check: [http://localhost:4000/api/health](http://localhost:4000/api/health)
@@ -110,7 +110,7 @@ Expected health response:
 }
 ```
 
-## Docker setup (Phase 8)
+## Docker setup 
 
 From repository root:
 
@@ -137,7 +137,7 @@ Open:
 - Your browser runs on the host machine, so client-side API calls must use host ports like `http://localhost:4000/api` (not `http://server:4000/api`).
 - `localhost` in a container means **that container itself**, not your host and not other containers.
 
-## Auth API (Phase 2)
+## Auth API 
 
 | Method | Endpoint | Auth | Description |
 | ------ | -------- | ---- | ----------- |
@@ -160,12 +160,12 @@ curl http://localhost:4000/api/auth/me \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
-## RBAC (Phase 3)
+## RBAC 
 
 | Role | Permissions |
 | ---- | ----------- |
-| `admin` | Full access; can delete leads (Phase 4); sees all users via admin API |
-| `sales` | CRUD on own leads only (Phase 4); cannot delete leads |
+| `admin` | Full access; can delete leads ; sees all users via admin API |
+| `sales` | CRUD on own leads only ; cannot delete leads |
 
 **Create the first admin** (after MongoDB is running):
 
@@ -190,7 +190,7 @@ curl http://localhost:4000/api/admin/overview \
   -H "Authorization: Bearer ADMIN_JWT_TOKEN"
 ```
 
-## Leads API (Phase 4)
+## Leads API 
 
 All routes require `Authorization: Bearer <token>`. Pagination is fixed at **10** per page.
 
@@ -216,7 +216,7 @@ curl -X POST http://localhost:4000/api/leads \
   -d "{\"name\":\"Rahul Sharma\",\"email\":\"rahul@example.com\",\"status\":\"new\",\"source\":\"instagram\"}"
 ```
 
-## CSV export (Phase 5)
+## CSV export 
 
 | Method | Endpoint | Description |
 | ------ | -------- | ----------- |
@@ -250,18 +250,7 @@ curl "http://localhost:4000/api/leads/export?status=qualified&source=instagram&s
 | `npm run typecheck` | Type-check without emitting  |
 | `npm run seed:admin`| Create/promote admin user      |
 
-## Development phases
-
-- [x] **Phase 0** — Tooling, monorepo scaffold, health route
-- [x] **Phase 1** — MongoDB, error handling, validation
-- [x] **Phase 2** — JWT authentication
-- [x] **Phase 3** — Role-based access control
-- [x] **Phase 4** — Leads CRUD, filters, pagination
-- [x] **Phase 5** — CSV export
-- [ ] **Phase 6** — Dashboard UI
-- [ ] **Phase 7** — Advanced UI features
-- [x] **Phase 8** — Docker (compose + containerized server/client)
-- [x] **Phase 9** — Docs, polish, deployment support
+## Development
 
 ## Demo credentials
 
@@ -271,7 +260,7 @@ curl "http://localhost:4000/api/leads/export?status=qualified&source=instagram&s
 - Set `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in `server/.env`.
 - Run `npm run seed:admin` in `server/` (script is defined in `server/package.json`).
 
-## Deployment notes (Phase 9)
+## Deployment notes 
 
 ### 1) MongoDB Atlas
 - Create an Atlas cluster and database user.
@@ -290,6 +279,4 @@ curl "http://localhost:4000/api/leads/export?status=qualified&source=instagram&s
 - Publish directory: `dist`
 - Set `VITE_API_URL` to your deployed API URL, e.g. `https://your-api.example.com/api`.
 
-## License
 
-MIT (assignment submission)
